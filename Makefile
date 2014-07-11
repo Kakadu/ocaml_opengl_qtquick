@@ -1,4 +1,4 @@
-OCAMLOPT=ocamlfind opt
+OCAMLOPT=ocamlfind opt -g -package tgls.tgles2
 OUT=openglunderqml
 MOC=moc
 CXXFLAGS=-fPIC `pkg-config --cflags Qt5Quick`
@@ -14,10 +14,16 @@ CMX=magic.cmx
 all: $(OUT)
 
 $(OUT): main.o kamlo.o moc_squircle.o squircle.o $(KAMLLIB)
-	$(CC) $^ -L`ocamlc -where` -lasmrun -lunix -lcamlstr $(NATIVECCLIBS) $(LDFLAGS) -o $(OUT)
+	$(CC) $^ `ocamlc -where`/bigarray.a \
+	`ocamlfind query ctypes`/libctypes_stubs.a \
+	`ocamlfind query ctypes`/libctypes-foreign-base_stubs.a \
+	`ocamlfind query tgls`/tgles2.a \
+	-lffi \
+	-lbigarray \
+	-L`ocamlc -where` -lasmrun -lunix -lcamlstr $(NATIVECCLIBS) $(LDFLAGS) -o $(OUT)
 
 $(KAMLLIB): $(CMX)
-	$(OCAMLOPT) -output-obj -dstartup $(CMX) -linkall -o $@
+	$(OCAMLOPT) -output-obj -dstartup $(CMX) -linkall -linkpkg -o $@ -verbose
 
 moc_squircle.o: moc_squircle.cpp
 

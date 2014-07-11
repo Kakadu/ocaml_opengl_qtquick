@@ -10,12 +10,8 @@ void Squircle::paint()
 {
 
     CAMLparam0();
-    static value *closure = nullptr;
-    if (closure == nullptr) {
-      closure = caml_named_value("camlRedraw");
-    }
-    Q_ASSERT(closure!=nullptr);
-    caml_callback(*closure, Val_unit); // should be a unit
+
+
 
     if (!m_program) {
         m_program = new QOpenGLShaderProgram();
@@ -70,6 +66,15 @@ void Squircle::paint()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+/*
+    static value *closure = nullptr;
+    if (closure == nullptr) {
+      closure = caml_named_value("camlRedraw");
+    }
+    Q_ASSERT(closure!=nullptr);
+    caml_callback(*closure, Val_unit); // should be a unit
+*/
 
     m_program->disableAttributeArray(0);
     m_program->release();
