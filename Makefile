@@ -1,4 +1,4 @@
-OCAMLOPT=ocamlfind opt -g -package tgls.tgles2
+OCAMLOPT=ocamlfind opt -g -package tgls.tgl3
 OUT=openglunderqml
 MOC=moc
 CXXFLAGS=-fPIC `pkg-config --cflags Qt5Quick`
@@ -17,7 +17,7 @@ $(OUT): main.o kamlo.o moc_squircle.o squircle.o $(KAMLLIB)
 	$(CC) $^ `ocamlc -where`/bigarray.a \
 	`ocamlfind query ctypes`/libctypes_stubs.a \
 	`ocamlfind query ctypes`/libctypes-foreign-base_stubs.a \
-	`ocamlfind query tgls`/tgles2.a \
+	`ocamlfind query tgls`/tgl3.a \
 	-lffi \
 	-lbigarray \
 	-L`ocamlc -where` -lasmrun -lunix -lcamlstr $(NATIVECCLIBS) $(LDFLAGS) -o $(OUT)

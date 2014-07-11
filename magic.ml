@@ -1,6 +1,6 @@
 open Printf
 
-open Tgles2
+open Tgl3
 
 let vertex_shader_src =
  "attribute vec4 vPosition; \
@@ -21,7 +21,7 @@ let glshader typ src =
   shader
 
 let glsetup () =
-  Gl.clear_color 0.0 0.0 0.0 1.0;
+  Gl.clear_color 0.0 55.0 0.0 1.0;
   let vertex_shader = glshader Gl.vertex_shader vertex_shader_src
   and fragment_shader = glshader Gl.fragment_shader fragment_shader_src in
   let program = Gl.create_program () in
@@ -32,17 +32,21 @@ let glsetup () =
 
 let glresize width height =
   let size = min width height in
-  Gl.viewport (width - size) (height - size) size size
+  let (x,y) = (width-size, height-size) in
+  printf "OCaml viewport %d %d %d %d\n%!" x y size size;
+  (*Gl.viewport (width - size) (height - size) size size*)
+  Gl.viewport x y size size
+  (*Gl.viewport 0 0 size size *)
 
 let glfloatbuf a = Bigarray.(Array1.of_array float32 c_layout a)
 
 let triangle = glfloatbuf [|
-     0.0;  0.622008459; 0.0;
-    -0.5; -0.311004243; 0.0;
-     0.5; -0.311004243; 0.0;
+     0.0;  0.0; 0.0;
+    -0.0;  99.9; 0.0;
+     99.9;  0.0; 0.0;
   |]
 
-let color = glfloatbuf [| 0.63671875; 0.76953125; 0.22265625; 1.0 |]
+let color = glfloatbuf [| 0.63671875; 55.76953125; 0.22265625; 1.0 |]
 
 let gldraw program =
   Gl.clear Gl.color_buffer_bit;

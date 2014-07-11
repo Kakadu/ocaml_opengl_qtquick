@@ -11,8 +11,6 @@ void Squircle::paint()
 
     CAMLparam0();
 
-
-
     if (!m_program) {
         m_program = new QOpenGLShaderProgram();
         m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
@@ -38,7 +36,8 @@ void Squircle::paint()
         connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
                 this, SLOT(cleanup()), Qt::DirectConnection);
     }
-//! [4] //! [5]
+
+
     m_program->bind();
 
     m_program->enableAttributeArray(0);
@@ -56,7 +55,7 @@ void Squircle::paint()
     int w = int(ratio * window()->width());
     int h = int(ratio * window()->height());
     glViewport(0, 0, w, h);
-
+    qDebug() << QString("Qt Viewport %1 %2 %3 %4").arg(0).arg(0).arg(w).arg(h);
     glDisable(GL_DEPTH_TEST);
 
     glClearColor(0, 0, 0, 1);
@@ -67,17 +66,20 @@ void Squircle::paint()
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-/*
+
     static value *closure = nullptr;
     if (closure == nullptr) {
       closure = caml_named_value("camlRedraw");
     }
     Q_ASSERT(closure!=nullptr);
-    caml_callback(*closure, Val_unit); // should be a unit
-*/
+    // Uncomment next line to enable OCaml
+    //caml_callback(*closure, Val_unit); // should be a unit
 
-    m_program->disableAttributeArray(0);
-    m_program->release();
+
+    if (m_program) {
+        m_program->disableAttributeArray(0);
+        m_program->release();
+    }
 
     CAMLreturn0;
 }
