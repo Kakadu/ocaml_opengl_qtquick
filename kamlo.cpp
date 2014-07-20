@@ -73,7 +73,7 @@ void Squircle::paint()
     }
     Q_ASSERT(closure!=nullptr);
     // Uncomment next line to enable OCaml
-    //caml_callback(*closure, Val_unit); // should be a unit
+    caml_callback(*closure, Val_unit); // should be a unit
 
 
     if (m_program) {
