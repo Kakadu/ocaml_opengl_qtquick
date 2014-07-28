@@ -3,6 +3,8 @@
 #include <QtQuick/qquickwindow.h>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/QOpenGLContext>
+//#include <QtOpenGL/QGLFunctions>
+#include <qglfunctions.h>
 
 #include "kamlo.h"
 
@@ -10,7 +12,7 @@ void Squircle::paint()
 {
 
     CAMLparam0();
-
+/*
     if (!m_program) {
         m_program = new QOpenGLShaderProgram();
         m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
@@ -36,35 +38,45 @@ void Squircle::paint()
         connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
                 this, SLOT(cleanup()), Qt::DirectConnection);
     }
+*/
 
-
-    m_program->bind();
-
-    m_program->enableAttributeArray(0);
 
     float values[] = {
-        -1, -1,
-        1, -1,
-        -1, 1,
-        1, 1
+         0, 0,
+         1, 0,
+         0, 1,
     };
-    m_program->setAttributeArray(0, GL_FLOAT, values, 2);
-    m_program->setUniformValue("t", (float) m_thread_t);
 
-    qreal ratio = window()->devicePixelRatio();
-    int w = int(ratio * window()->width());
-    int h = int(ratio * window()->height());
+    int w = window()->width() ;
+    int h = window()->height();
     glViewport(0, 0, w, h);
-    qDebug() << QString("Qt Viewport %1 %2 %3 %4").arg(0).arg(0).arg(w).arg(h);
+    //qDebug() << QString("Qt Viewport %1 %2 %3 %4").arg(0).arg(0).arg(w).arg(h);
     glDisable(GL_DEPTH_TEST);
 
-    glClearColor(0, 0, 0, 1);
+    glClearColor(255, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    #if 0
+    glBegin(GL_TRIANGLES);
+    glColor3f (0,0,255);
+    glVertex3f(0,0,0);
+    glVertex3f(1,0,0);
+    glVertex3f(0,100,0);
+    glEnd();
+    #endif
+
+    #if 1
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(values), values, GL_STATIC_DRAW);
+    glDrawArray(GL_TRIANGLES, 0, 3);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo, 0);
+    #endif
+    //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 
     static value *closure = nullptr;
@@ -73,13 +85,13 @@ void Squircle::paint()
     }
     Q_ASSERT(closure!=nullptr);
     // Uncomment next line to enable OCaml
-    caml_callback(*closure, Val_unit); // should be a unit
+    //caml_callback(*closure, Val_unit); // should be a unit
 
-
+    /*
     if (m_program) {
         m_program->disableAttributeArray(0);
         m_program->release();
-    }
+        }*/
 
     CAMLreturn0;
 }

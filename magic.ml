@@ -41,12 +41,13 @@ let glresize width height =
 let glfloatbuf a = Bigarray.(Array1.of_array float32 c_layout a)
 
 let triangle = glfloatbuf [|
-     0.0;  0.0; 0.0;
-    -0.0;  99.9; 0.0;
-     99.9;  0.0; 0.0;
+     -1.0; -1.0; 0.0;
+      1.0; -1.0; 0.0;
+     -1.0;  1.0; 0.0;
+      1.0;  1.0; 0.0;
   |]
 
-let color = glfloatbuf [| 0.63671875; 55.76953125; 0.22265625; 1.0 |]
+let color = glfloatbuf [| 255.; 255.; 0.; 1.0 |]
 
 let gldraw program =
   Gl.clear Gl.color_buffer_bit;
@@ -54,10 +55,10 @@ let gldraw program =
   printf "using program\n%!";
   let position_hnd = Gl.get_attrib_location program "vPosition" in
   Gl.enable_vertex_attrib_array position_hnd;
-  Gl.vertex_attrib_pointer position_hnd 3 Gl.float false 0 (`Data triangle);
+  Gl.vertex_attrib_pointer position_hnd 4 Gl.float false 0 (`Data triangle);
   let color_hnd = Gl.get_uniform_location program "vColor" in
   Gl.uniform4fv color_hnd 1 color;
-  Gl.draw_arrays Gl.triangles 0 3;
+  Gl.draw_arrays Gl.triangles 0 4;
   Gl.disable_vertex_attrib_array position_hnd
 
 (*

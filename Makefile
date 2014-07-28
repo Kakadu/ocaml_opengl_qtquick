@@ -1,8 +1,8 @@
 OCAMLOPT=ocamlfind opt -g -package tgls.tgl3
 OUT=openglunderqml
 MOC=moc
-CXXFLAGS=-fPIC `pkg-config --cflags Qt5Quick`
-LDFLAGS=`pkg-config --libs Qt5Quick` -lGL
+CXXFLAGS=-fPIC `pkg-config --cflags Qt5Quick Qt5OpenGL`
+LDFLAGS=`pkg-config --libs Qt5Quick Qt5OpenGL` -lGL
 CC=g++ -g -std=c++0x
 KAMLLIB=camlcode.o
 CMX=magic.cmx
